@@ -105,6 +105,10 @@ export class LibDev {
 			for (const file of files) {
 				if (file.isFile()) {
 					const baseName = basename(file.name, extname(file.name));
+					if (baseName[0] === baseName[0].toUpperCase()) {
+					} else {
+						continue;
+					}
 					const extWithDot = extname(file.name);
 					if (extWithDot == '.ts') {
 						import_.push(
