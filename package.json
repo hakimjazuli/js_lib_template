@@ -1,0 +1,38 @@
+{
+	"name": "@html_first/js_lib_template",
+	"version": "0.8.0",
+	"description": "an opionated js library single file exporter",
+	"main": "index.mjs",
+	"types": "./types/index.d.mts",
+	"module": "index.mjs",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hakimjazuli/js_lib_template.git"
+	},
+	"keywords": [
+		"javascript",
+		"typescript",
+		"library creation helper",
+		"template"
+	],
+	"scripts": {
+		"dev": "concurrently \"bun ./dev/index.mjs\" \"bun gen:type\"",
+		"gen:type": "tsc ./index.mjs --allowJs --declaration --emitDeclarationOnly --outDir ./types --module ESNext --target ES2020 --moduleResolution node --esModuleInterop --skipLibCheck --watch"
+	},
+	"author": "hakim_jazuli",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/hakimjazuli/js_lib_template/issues"
+	},
+	"homepage": "https://github.com/hakimjazuli/js_lib_template#readme",
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0",
+		"@html_first/simple_queue": "^1.2.1",
+		"concurrently": "^9.0.0",
+		"chokidar": "^3.6.0"
+	}
+}
