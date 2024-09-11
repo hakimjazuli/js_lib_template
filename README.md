@@ -6,6 +6,14 @@
 
 -   `LibDev`
 
+## install with
+
+```shell
+npm i @html_first/js_lib_template --save-dev
+```
+
+-   make sure it's on your `devDependencies` to avoid problems in production;
+
 ## the catch
 
 -   opionanted
