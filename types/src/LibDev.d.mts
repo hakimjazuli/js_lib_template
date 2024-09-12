@@ -1,5 +1,14 @@
 export class LibDev {
-    static generatedString: string[];
+    /**
+     * @private
+     * @readonly
+     */
+    private static readonly generatedString;
+    /**
+     * @private
+     * @readonly
+     */
+    private static readonly typesIdentifier;
     /**
      * @private
      * @param {string[]} lines
@@ -16,6 +25,11 @@ export class LibDev {
      * @param {string} filePath
      */
     private static getBasenameWithoutExt;
+    /**
+     * @private
+     * @param {string} path_
+     */
+    private static getContent;
     /**
      * @private
      * @param {string} path_
@@ -38,12 +52,18 @@ export class LibDev {
         description?: string[];
         chokidarWatchOptions?: import("chokidar").WatchOptions;
     });
-    filePath: string;
+    /**
+     * @private
+     */
+    private filePath;
     /**
      * @private
      */
     private comments;
-    folderPath: string;
+    /**
+     * @private
+     */
+    private folderPath;
     /**
      * @private
      */

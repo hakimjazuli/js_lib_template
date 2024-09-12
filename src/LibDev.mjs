@@ -7,9 +7,13 @@ import { basename, extname, join } from 'path';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
 
 export class LibDev {
+	/**
+	 * @private
+	 * @readonly
+	 */
 	static generatedString = [
 		'generated using:',
-		'@see {@link https://www.npmjs.com/package/@html_first/lib_template|@html_first/lib_template}',
+		'@see {@link https://www.npmjs.com/package/@html_first/js_lib_template | @html_first/js_lib_template}',
 	];
 	/**
 	 * @param {{
@@ -42,6 +46,14 @@ export class LibDev {
 	}
 	/**
 	 * @private
+	 */
+	folderPath;
+	/**
+	 * @private
+	 */
+	filePath;
+	/**
+	 * @private
 	 * @type {_Queue}
 	 */
 	queueHandler;
@@ -58,20 +70,28 @@ export class LibDev {
 	 */
 	createHandler = async () => {
 		this.watcher
-			.on('add', async (path_, stats) => {
+			.on('add', async (path_) => {
 				this.handle(path_);
 			})
-			.on('change', async (path_, stats) => {
+			.on('change', async (path_) => {
 				this.handle(path_);
 			});
 	};
 	/**
 	 * @private
+	 * @readonly
+	 */
+	static typesIdentifier = '.type.';
+	/**
+	 * @private
 	 * @param {string} path_
 	 */
 	handle = async (path_) => {
-		if (!(await LibDev.hasNamedExport(path_))) {
-			return;
+		switch (true) {
+			case path_.includes(LibDev.typesIdentifier):
+				break;
+			case !(await LibDev.hasNamedExport(path_)):
+				return;
 		}
 		this.queueHandler.assign(
 			new _QueueObject(
@@ -102,37 +122,58 @@ export class LibDev {
 			const files = await fs.readdir(folderPath, { withFileTypes: true });
 			const import_ = [];
 			const export_ = [];
+			const types_ = [];
 			for (const file of files) {
 				if (file.isFile()) {
 					const baseName = basename(file.name, extname(file.name));
-					if (baseName[0] === baseName[0].toUpperCase()) {
-					} else if (baseName[0] === baseName[0].toLowerCase()) {
-						continue;
-					} else {
+					switch (true) {
+						case file.name.includes(LibDev.typesIdentifier):
+						case baseName[0] === baseName[0].toUpperCase():
+							break;
+						case baseName[0] === baseName[0].toLowerCase():
+							continue;
 					}
 					const extWithDot = extname(file.name);
-					if (extWithDot == '.ts') {
-						import_.push(
-							`import { ${baseName} } from './${join(folderPath, baseName).replace(
-								/\\/g,
-								'/'
-							)}';`
+					if (file.name.includes(LibDev.typesIdentifier)) {
+						const fileContent = await LibDev.getContent(join(folderPath, file.name));
+						const name = file.name.replace(
+							(LibDev.typesIdentifier + extWithDot).replace('..', '.'),
+							''
 						);
+						const allComments = fileContent.match(
+							new RegExp(
+								`\/\\*\\*[\\s\\S]*?@typedef[\\s\\S]*?${name}[\\s\\S]*?\\*\\/`
+							)
+						);
+						if (allComments) {
+							types_.push(allComments.join('\n'));
+						}
 					} else {
-						import_.push(
-							`import { ${baseName} } from './${join(
-								folderPath,
-								baseName + extWithDot
-							).replace(/\\/g, '/')}';`
-						);
+						if (extWithDot == '.ts') {
+							import_.push(
+								`import { ${baseName} } from './${join(
+									folderPath,
+									baseName
+								).replace(/\\/g, '/')}';`
+							);
+						}
+						if (extWithDot == '.mjs') {
+							import_.push(
+								`import { ${baseName} } from './${join(
+									folderPath,
+									baseName + extWithDot
+								).replace(/\\/g, '/')}';`
+							);
+						}
+						export_.push(baseName);
 					}
-					export_.push(baseName);
 				}
 			}
 			const tsCheckString = this.filePath.includes('.ts') ? '' : '// @ts-check\n\n';
+			const types__ = types_.length ? '\n\n' + types_.join('\n') + '\n' : '';
 			const fileString = `${tsCheckString}${this.comments}\n\n${import_.join(
 				'\n'
-			)}\n\nexport { ${export_.join(', ')} };`;
+			)}${types__}\nexport { ${export_.join(', ')} };`;
 			LibDev.overwriteFileAsync(this.filePath, fileString);
 		} catch (error) {
 			console.error(`Error reading directory ${folderPath}:`, error);
@@ -163,9 +204,16 @@ export class LibDev {
 	 * @private
 	 * @param {string} path_
 	 */
+	static getContent = async (path_) => {
+		return await readFile(path_, 'utf-8');
+	};
+	/**
+	 * @private
+	 * @param {string} path_
+	 */
 	static hasNamedExport = async (path_) => {
 		try {
-			const code = await readFile(path_, 'utf-8');
+			const code = await LibDev.getContent(path_);
 			let exportName = LibDev.getBasenameWithoutExt(path_);
 			const namedExportPattern = new RegExp(
 				'export\\s+' + '(?:const|let|var|function|class|[^\\s]+)\\s+' + exportName + '\\b',
