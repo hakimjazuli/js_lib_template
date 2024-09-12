@@ -149,7 +149,7 @@ export class LibDev {
 							types_.push(allComments.join('\n'));
 						}
 					} else {
-						if (extWithDot == '.ts') {
+						if (extWithDot == '.ts' || extWithDot == '.mts') {
 							import_.push(
 								`import { ${baseName} } from './${join(
 									folderPath,
@@ -169,7 +169,10 @@ export class LibDev {
 					}
 				}
 			}
-			const tsCheckString = this.filePath.includes('.ts') ? '' : '// @ts-check\n\n';
+			const tsCheckString =
+				this.filePath.includes('.ts') || this.filePath.includes('.mts')
+					? ''
+					: '// @ts-check\n\n';
 			const types__ = types_.length ? '\n\n' + types_.join('\n') + '\n' : '';
 			const fileString = `${tsCheckString}${this.comments}\n\n${import_.join(
 				'\n'
