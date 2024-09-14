@@ -14,7 +14,7 @@
 		"javascript",
 		"typescript",
 		"library creation helper",
-		"template"
+		"templating"
 	],
 	"scripts": {
 		"dev": "concurrently \"bun ./dev/index.mjs\" \"bun tsc --watch\""
