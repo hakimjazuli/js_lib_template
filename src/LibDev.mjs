@@ -16,40 +16,36 @@ export class LibDev {
 		'@see {@link https://www.npmjs.com/package/@html_first/js_lib_template | @html_first/js_lib_template}',
 	];
 	/**
-	 * @param {{
-	 * relativeFilePath:string,
-	 * relativeFolderPath?:string,
-	 * copyright?:string[],
-	 * description?:string[],
-	 * chokidarWatchOptions?:import('chokidar').WatchOptions,
-	 * }} param0
-	 * - all string path is relative to active working directory;
+	 * @param {Object} a0
+	 * @param {string} a0.filePath
+	 * - realtive path
+	 * @param {string} [a0.folderPath]
+	 * - realtive path
+	 * @param {string[]} [a0.copyright]
+	 * @param {string[]} [a0.description]
+	 * @param {import('chokidar').WatchOptions} [a0.option]
 	 */
-	constructor({
-		relativeFilePath,
-		relativeFolderPath = './src',
-		copyright = [],
-		description = [],
-		chokidarWatchOptions = {},
-	}) {
-		this.filePath = relativeFilePath;
+	constructor({ filePath, folderPath = './src', copyright = [], description = [], option = {} }) {
+		this.filePath = filePath;
 		copyright.unshift('@copyright:');
 		copyright.push(';;;');
 		description.unshift('@description:');
 		description.push(';;;');
 		const comments = [...LibDev.generatedString, ...copyright, ...description];
 		this.comments = LibDev.generateCommentBlock(comments);
-		this.folderPath = relativeFolderPath;
-		this.watcher = chokidar.watch(relativeFolderPath, chokidarWatchOptions);
+		this.folderPath = folderPath;
+		this.watcher = chokidar.watch(folderPath, option);
 		this.queueHandler = new _Queue();
 		this.createHandler();
 	}
 	/**
 	 * @private
+	 * @type {string}
 	 */
 	folderPath;
 	/**
 	 * @private
+	 * @type {string}
 	 */
 	filePath;
 	/**
@@ -59,10 +55,12 @@ export class LibDev {
 	queueHandler;
 	/**
 	 * @private
+	 * @type {string}
 	 */
 	comments;
 	/**
 	 * @private
+	 * @type {chokidar.FSWatcher}
 	 */
 	watcher;
 	/**
@@ -169,10 +167,16 @@ export class LibDev {
 					}
 				}
 			}
-			const tsCheckString =
-				this.filePath.includes('.ts') || this.filePath.includes('.mts')
-					? ''
-					: '// @ts-check\n\n';
+			let tsCheckString;
+			switch (true) {
+				case this.filePath.includes('.ts'):
+				case this.filePath.includes('.mts'):
+					tsCheckString = '';
+					break;
+				default:
+					tsCheckString = '// @ts-check\n\n';
+					break;
+			}
 			const types__ = types_.length ? '\n\n' + types_.join('\n') + '\n' : '';
 			const fileString = `${tsCheckString}${this.comments}\n\n${import_.join(
 				'\n'

@@ -36,36 +36,40 @@ export class LibDev {
      */
     private static hasNamedExport;
     /**
-     * @param {{
-     * relativeFilePath:string,
-     * relativeFolderPath?:string,
-     * copyright?:string[],
-     * description?:string[],
-     * chokidarWatchOptions?:import('chokidar').WatchOptions,
-     * }} param0
-     * - all string path is relative to active working directory;
+     * @param {Object} a0
+     * @param {string} a0.filePath
+     * - realtive path
+     * @param {string} [a0.folderPath]
+     * - realtive path
+     * @param {string[]} [a0.copyright]
+     * @param {string[]} [a0.description]
+     * @param {import('chokidar').WatchOptions} [a0.option]
      */
-    constructor({ relativeFilePath, relativeFolderPath, copyright, description, chokidarWatchOptions, }: {
-        relativeFilePath: string;
-        relativeFolderPath?: string;
+    constructor({ filePath, folderPath, copyright, description, option }: {
+        filePath: string;
+        folderPath?: string;
         copyright?: string[];
         description?: string[];
-        chokidarWatchOptions?: import("chokidar").WatchOptions;
+        option?: import("chokidar").WatchOptions;
     });
     /**
      * @private
+     * @type {string}
      */
     private filePath;
     /**
      * @private
+     * @type {string}
      */
     private comments;
     /**
      * @private
+     * @type {string}
      */
     private folderPath;
     /**
      * @private
+     * @type {chokidar.FSWatcher}
      */
     private watcher;
     /**
