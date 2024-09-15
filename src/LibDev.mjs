@@ -253,9 +253,11 @@ export class LibDev {
 					const exportedAPI_ = exportedAPI[i];
 					readMe_.unshift(`- [${exportedAPI_}](#${exportedAPI_.toLocaleLowerCase()})`);
 				}
-				readMe_.unshift('## EXPORTED API AND TYPES');
+				readMe_.unshift(
+					`<h2 id="${LibDev.exportedListContent}">EXPORTED API AND TYPES</h2>`
+				);
 				readMe_.unshift(LibDev.readMeString(this.comment));
-				const readMeString = readMe_.join('\n');
+				const readMeString = readMe_.join('\n\n');
 				LibDev.overwriteFileAsync(this.readMePath, readMeString);
 			}
 			LibDev.overwriteFileAsync(this.filePath, fileString);
@@ -263,6 +265,7 @@ export class LibDev {
 			console.error(`Error reading directory ${folderPath}:`, error);
 		}
 	};
+	static exportedListContent = 'exported-list-content';
 	/**
 	 * @private
 	 * @param {string} fileString
@@ -292,7 +295,9 @@ export class LibDev {
 				.trim()
 				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
-				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${result}`;
+				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n\n*) <sub>[go to exported list](#${
+					LibDev.exportedListContent
+				})</sub>\n${result}`;
 			}
 			return result;
 		}
