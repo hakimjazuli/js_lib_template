@@ -6,7 +6,7 @@
  * @copyright
  * developed and published under MIT license,
  * @description
- * !!!Note generated using [@html_first/js_lib_template](https://www.npmjs.com/package/@html_firstjs_lib_template)
+ * !!!Note generated using [@html_first/js_lib_template](https://www.npmjs.com/package/@html_first/js_lib_template)
  * 
  * !!!WARNING STARTS this library is highly opionated
  * - uses single-named export on same-named file
@@ -33,8 +33,8 @@
  * ## HOW TO USE
  *  create new `LibDev` instance
  *  ```js
- * /// file.mjs
- * /// @ts-check
+ * // file.mjs
+ * // @ts-check
  * 
  * import { LibDev } from "@html_first/js_lib_template"
  * 
@@ -42,7 +42,7 @@
  * ```
  * 
  * ```js
- * node ./path/to/file.mjs /// ofcourse you can other than node, like bun deno or other
+ * node ./path/to/file.mjs // ofcourse you can other than node, like bun deno or other
  * ```
  */
 

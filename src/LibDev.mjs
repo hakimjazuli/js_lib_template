@@ -284,7 +284,7 @@ export class LibDev {
 			const result = match[1]
 				.replace(/^\s*\*\s?/gm, '')
 				.trim()
-				.replace(/\/(?!.*\/)/g, '');
+				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
 				return `## ${fileName}\n${result}`;
 			}
