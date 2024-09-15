@@ -7,6 +7,14 @@
  * developed and published under MIT license,
  * ;;;
  * @description:
+ * -   `.type.`:
+ *   > -   export first name matched `typedef` comment inside the `file`;
+ *   > -   it will export the whole comment, so if you don't want to export it, best to
+ *   >     separate the comment block;
+ * -   `.export.`:
+ *   > -   export module with matched file name (without `.export.`);
+ *   > -   usefull to export function like `html` literal (like on `lit`
+ *   >     `html template literal function`);
  * !!!WARNING!!!
  * - this library uses single-named export on same-named file
  * - don't use it on a production or published library directly without checking any behaviour

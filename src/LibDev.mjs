@@ -5,6 +5,7 @@ import { readFile } from 'fs/promises';
 import { promises as fs } from 'fs';
 import { basename, extname, join } from 'path';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
+import { log } from 'console';
 
 export class LibDev {
 	/**
@@ -77,16 +78,27 @@ export class LibDev {
 	};
 	/**
 	 * @private
-	 * @readonly
 	 */
-	static typesIdentifier = '.type.';
+	static directives = {
+		typesIdentifier: 'type',
+		forcedExport: 'export',
+	};
+	/**
+	 * @private
+	 * @param {Extract<keyof LibDev.directives, string>} directiveName
+	 * @returns {string}
+	 */
+	static makeDirective = (directiveName) => {
+		return `.${LibDev.directives[directiveName]}.`;
+	};
 	/**
 	 * @private
 	 * @param {string} path_
 	 */
 	handle = async (path_) => {
 		switch (true) {
-			case path_.includes(LibDev.typesIdentifier):
+			case path_.includes(LibDev.makeDirective('typesIdentifier')):
+			case path_.includes(LibDev.makeDirective('forcedExport')):
 				break;
 			case !(await LibDev.hasNamedExport(path_)):
 				return;
@@ -123,19 +135,22 @@ export class LibDev {
 			const types_ = [];
 			for (const file of files) {
 				if (file.isFile()) {
-					const baseName = basename(file.name, extname(file.name));
+					let baseName = basename(file.name, extname(file.name));
+					const typesIdentifier = LibDev.makeDirective('typesIdentifier');
+					const forcedExport = LibDev.makeDirective('forcedExport');
 					switch (true) {
-						case file.name.includes(LibDev.typesIdentifier):
+						case file.name.includes(typesIdentifier):
+						case file.name.includes(forcedExport):
 						case baseName[0] === baseName[0].toUpperCase():
 							break;
 						case baseName[0] === baseName[0].toLowerCase():
 							continue;
 					}
 					const extWithDot = extname(file.name);
-					if (file.name.includes(LibDev.typesIdentifier)) {
+					if (file.name.includes(typesIdentifier)) {
 						const fileContent = await LibDev.getContent(join(folderPath, file.name));
 						const name = file.name.replace(
-							(LibDev.typesIdentifier + extWithDot).replace('..', '.'),
+							(typesIdentifier + extWithDot).replace('..', '.'),
 							''
 						);
 						const allComments = fileContent.match(
@@ -147,9 +162,17 @@ export class LibDev {
 							types_.push(allComments.join('\n'));
 						}
 					} else {
+						let moduleName = baseName;
+						if (file.name.includes(forcedExport)) {
+							moduleName = file.name.replace(
+								(forcedExport + extWithDot).replace('..', '.'),
+								''
+							);
+							log(moduleName);
+						}
 						if (extWithDot == '.ts' || extWithDot == '.mts') {
 							import_.push(
-								`import { ${baseName} } from './${join(
+								`import { ${moduleName} } from './${join(
 									folderPath,
 									baseName
 								).replace(/\\/g, '/')}';`
@@ -157,13 +180,13 @@ export class LibDev {
 						}
 						if (extWithDot == '.mjs') {
 							import_.push(
-								`import { ${baseName} } from './${join(
+								`import { ${moduleName} } from './${join(
 									folderPath,
 									baseName + extWithDot
 								).replace(/\\/g, '/')}';`
 							);
 						}
-						export_.push(baseName);
+						export_.push(moduleName);
 					}
 				}
 			}

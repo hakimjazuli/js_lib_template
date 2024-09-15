@@ -6,9 +6,14 @@ export class LibDev {
     private static readonly generatedString;
     /**
      * @private
-     * @readonly
      */
-    private static readonly typesIdentifier;
+    private static directives;
+    /**
+     * @private
+     * @param {Extract<keyof LibDev.directives, string>} directiveName
+     * @returns {string}
+     */
+    private static makeDirective;
     /**
      * @private
      * @param {string[]} lines
