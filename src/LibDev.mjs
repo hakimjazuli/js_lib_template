@@ -21,6 +21,17 @@ import { _Queue, _QueueObject } from '@html_first/simple_queue';
  *       option?: import("chokidar").WatchOptions;
  *    });
  *	```
+ *
+ * - the exported API should match literally:
+ * ```js
+ *	const exportPatterns = [
+ *		`export class ${exportName}`,
+ *		`export const ${exportName}`,
+ *		`export function ${exportName}`,
+ *	];
+ * ```
+ * > - no `var` or `let` as it should not be reassigned;
+ * > - this detection uses `string.includes`, as I cannot get arround `regex` to allow me to use `$` as export name;
  */
 export class LibDev {
 	/**
@@ -98,10 +109,10 @@ export class LibDev {
 	createHandler = async () => {
 		this.watcher
 			.on('add', async (path_) => {
-				this.handle(path_);
+				await this.handle(path_);
 			})
 			.on('change', async (path_) => {
-				this.handle(path_);
+				await this.handle(path_);
 			});
 	};
 	/**
@@ -258,12 +269,13 @@ export class LibDev {
 				);
 				readMe_.unshift(LibDev.readMeString(this.comment));
 				const readMeString = readMe_.join('\n\n');
-				LibDev.overwriteFileAsync(this.readMePath, readMeString);
+				await LibDev.overwriteFileAsync(this.readMePath, readMeString);
 			}
-			LibDev.overwriteFileAsync(this.filePath, fileString);
+			await LibDev.overwriteFileAsync(this.filePath, fileString);
 		} catch (error) {
 			console.error(`Error reading directory ${folderPath}:`, error);
 		}
+		return;
 	};
 	static exportedListContent = 'exported-list-content';
 	/**
@@ -281,6 +293,10 @@ export class LibDev {
 	};
 	/**
 	 * @private
+	 */
+	static goToExportedList = `\n*) <sub>[go to exported list](#${LibDev.exportedListContent})</sub>\n`;
+	/**
+	 * @private
 	 * @param {string} fileString
 	 * @param {string} [fileName]
 	 * @returns {string}
@@ -295,9 +311,9 @@ export class LibDev {
 				.trim()
 				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
-				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n\n*) <sub>[go to exported list](#${
-					LibDev.exportedListContent
-				})</sub>\n${result}`;
+				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${
+					LibDev.goToExportedList
+				}\n${result}\n${LibDev.goToExportedList}`;
 			}
 			return result;
 		}
@@ -311,9 +327,11 @@ export class LibDev {
 	static overwriteFileAsync = async (filePath, content) => {
 		try {
 			await fs.writeFile(filePath, content, 'utf-8');
-			console.log({ filePath, message: 'File Generated successfully.' });
+			console.log({ message: 'File Generated successfully.', filePath });
+			return;
 		} catch (error) {
-			console.error({ filePath, status: 'Error overwriting file:', error });
+			console.error({ error, filePath, status: 'Error overwriting file:' });
+			return;
 		}
 	};
 	/**
@@ -339,16 +357,15 @@ export class LibDev {
 		try {
 			const code = await LibDev.getContent(path_);
 			let exportName = LibDev.getBasenameWithoutExt(path_);
-			const namedExportPattern = new RegExp(
-				'export\\s+' +
-					'(?!default\\s+)' +
-					'(?:const|let|var|function|class|[^\\s]+)\\s+' +
-					exportName +
-					'\\b',
-				'g'
-			);
-			if (namedExportPattern.test(code)) {
-				return true;
+			const exportPatterns = [
+				`export class ${exportName}`,
+				`export const ${exportName}`,
+				`export function ${exportName}`,
+			];
+			for (const pattern of exportPatterns) {
+				if (code.includes(pattern)) {
+					return true;
+				}
 			}
 			return false;
 		} catch (error) {

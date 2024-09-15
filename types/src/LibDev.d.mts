@@ -13,6 +13,17 @@
  *       option?: import("chokidar").WatchOptions;
  *    });
  *	```
+ *
+ * - the exported API should match literally:
+ * ```js
+ *	const exportPatterns = [
+ *		`export class ${exportName}`,
+ *		`export const ${exportName}`,
+ *		`export function ${exportName}`,
+ *	];
+ * ```
+ * > - no `var` or `let` as it should not be reassigned;
+ * > - this detection uses `string.includes`, as I cannot get arround `regex` to allow me to use `$` as export name;
  */
 export class LibDev {
     /**
@@ -35,12 +46,17 @@ export class LibDev {
      * @param {string[]} lines
      */
     private static generateCommentBlock;
+    static exportedListContent: string;
     /**
      * @private
      * @param {string} fileString
      * @returns {string}
      */
     private static getFirstDescriptionBlock;
+    /**
+     * @private
+     */
+    private static goToExportedList;
     /**
      * @private
      * @param {string} fileString

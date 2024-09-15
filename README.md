@@ -37,7 +37,14 @@ new LibDev(options);
 node ./path/to/file.mjs // ofcourse you can other than node, like bun deno or other
 ```
 
-## EXPORTED API AND TYPES
+
+<h2 id="exported-list-content">EXPORTED API AND TYPES</h2>
+
 - [LibDev](#libdev)
+
 <h2 id="libdev">LibDev</h2>
-- class API to watch for file changes-  we use chokidar for watching changes:> - refer the options to [chokidar github](https://github.com/paulmillr/chokidar)```js    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {      filePath: string;      folderPath?: string;      readMePath?: string;      copyright?: string[];      description?: string[];      option?: import("chokidar").WatchOptions;   });```
+
+*) <sub>[go to exported list](#exported-list-content)</sub>
+- class API to watch for file changes-  we use chokidar for watching changes:> - refer the options to [chokidar github](https://github.com/paulmillr/chokidar)```js    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {      filePath: string;      folderPath?: string;      readMePath?: string;      copyright?: string[];      description?: string[];      option?: import("chokidar").WatchOptions;   });```- the exported API should match literally:```jsconst exportPatterns = [	`export class ${exportName}`,	`export const ${exportName}`,	`export function ${exportName}`,];```> - no `var` or `let` as it should not be reassigned;> - this detection uses `string.includes`, as I cannot get arround `regex` to allow me to use `$` as export name;
+
+*) <sub>[go to exported list](#exported-list-content)</sub>
