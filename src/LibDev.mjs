@@ -5,8 +5,23 @@ import { readFile } from 'fs/promises';
 import { promises as fs } from 'fs';
 import { basename, extname, join } from 'path';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
-import { log } from 'console';
 
+/**
+ * @description
+ * - class API to watch for file changes
+ * -  we use chokidar for watching changes:
+ * > - refer the options to [chokidar github](https://github.com/paulmillr/chokidar)
+ * ```js
+ *     constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {
+ *       filePath: string;
+ *       folderPath?: string;
+ *       readMePath?: string;
+ *       copyright?: string[];
+ *       description?: string[];
+ *       option?: import("chokidar").WatchOptions;
+ *    });
+ *	```
+ */
 export class LibDev {
 	/**
 	 * @private
@@ -22,23 +37,36 @@ export class LibDev {
 	 * - realtive path
 	 * @param {string} [a0.folderPath]
 	 * - realtive path
+	 * @param {string} [a0.readMePath]
+	 * - realtive path
 	 * @param {string[]} [a0.copyright]
 	 * @param {string[]} [a0.description]
 	 * @param {import('chokidar').WatchOptions} [a0.option]
 	 */
-	constructor({ filePath, folderPath = './src', copyright = [], description = [], option = {} }) {
+	constructor({
+		filePath,
+		readMePath = '',
+		folderPath = './src',
+		copyright = [],
+		description = [],
+		option = {},
+	}) {
 		this.filePath = filePath;
-		copyright.unshift('@copyright:');
-		copyright.push(';;;');
-		description.unshift('@description:');
-		description.push(';;;');
+		copyright.unshift('@copyright');
+		description.unshift('@description');
 		const comments = [...LibDev.generatedString, ...copyright, ...description];
-		this.comments = LibDev.generateCommentBlock(comments);
+		this.comment = LibDev.generateCommentBlock(comments);
 		this.folderPath = folderPath;
 		this.watcher = chokidar.watch(folderPath, option);
 		this.queueHandler = new _Queue();
+		this.readMePath = readMePath;
 		this.createHandler();
 	}
+	/**
+	 * @private
+	 * @type {string}
+	 */
+	readMePath;
 	/**
 	 * @private
 	 * @type {string}
@@ -58,7 +86,7 @@ export class LibDev {
 	 * @private
 	 * @type {string}
 	 */
-	comments;
+	comment;
 	/**
 	 * @private
 	 * @type {chokidar.FSWatcher}
@@ -133,11 +161,13 @@ export class LibDev {
 			const import_ = [];
 			const export_ = [];
 			const types_ = [];
+			const readMe_ = [];
+			const exportedAPI = [];
+			const typesIdentifier = LibDev.makeDirective('typesIdentifier');
+			const forcedExport = LibDev.makeDirective('forcedExport');
 			for (const file of files) {
 				if (file.isFile()) {
 					let baseName = basename(file.name, extname(file.name));
-					const typesIdentifier = LibDev.makeDirective('typesIdentifier');
-					const forcedExport = LibDev.makeDirective('forcedExport');
 					switch (true) {
 						case file.name.includes(typesIdentifier):
 						case file.name.includes(forcedExport):
@@ -153,6 +183,10 @@ export class LibDev {
 							(typesIdentifier + extWithDot).replace('..', '.'),
 							''
 						);
+						if (fileContent) {
+							readMe_.push(LibDev.readMeString(fileContent, name));
+							exportedAPI.push(name);
+						}
 						const allComments = fileContent.match(
 							new RegExp(
 								`\/\\*\\*[\\s\\S]*?@typedef[\\s\\S]*?${name}[\\s\\S]*?\\*\\/`
@@ -162,13 +196,17 @@ export class LibDev {
 							types_.push(allComments.join('\n'));
 						}
 					} else {
+						const fileContent = await LibDev.getContent(join(folderPath, file.name));
 						let moduleName = baseName;
 						if (file.name.includes(forcedExport)) {
 							moduleName = file.name.replace(
 								(forcedExport + extWithDot).replace('..', '.'),
 								''
 							);
-							log(moduleName);
+						}
+						if (fileContent) {
+							readMe_.push(LibDev.readMeString(fileContent, moduleName));
+							exportedAPI.push(moduleName);
 						}
 						if (extWithDot == '.ts' || extWithDot == '.mts') {
 							import_.push(
@@ -201,13 +239,58 @@ export class LibDev {
 					break;
 			}
 			const types__ = types_.length ? '\n\n' + types_.join('\n') + '\n' : '';
-			const fileString = `${tsCheckString}${this.comments}\n\n${import_.join(
+			const fileString = `${tsCheckString}${this.comment}\n\n${import_.join(
 				'\n'
 			)}${types__}\nexport { ${export_.join(', ')} };`;
+			if (this.readMePath) {
+				for (let i = 0; i < exportedAPI.length; i++) {
+					const exportedAPI_ = exportedAPI[i];
+					readMe_.unshift(`- [${exportedAPI_}](#${exportedAPI_.toLocaleLowerCase()})`);
+				}
+				readMe_.unshift('## EXPORTED API AND TYPES');
+				readMe_.unshift(LibDev.readMeString(this.comment));
+				const readMeString = readMe_.join('\n');
+				LibDev.overwriteFileAsync(this.readMePath, readMeString);
+			}
 			LibDev.overwriteFileAsync(this.filePath, fileString);
 		} catch (error) {
 			console.error(`Error reading directory ${folderPath}:`, error);
 		}
+	};
+	/**
+	 * @private
+	 * @param {string} fileString
+	 * @returns {string}
+	 */
+	static getFirstDescriptionBlock = (fileString) => {
+		const regex = /\/\*\*([\s\S]*?@description[\s\S]*?)\*\//;
+		const match = fileString.match(regex);
+		if (match) {
+			return match[0].trim();
+		}
+		return '';
+	};
+	/**
+	 * @private
+	 * @param {string} fileString
+	 * @param {string} [fileName]
+	 * @returns {string}
+	 */
+	static readMeString = (fileString, fileName = '') => {
+		const commentBlock = LibDev.getFirstDescriptionBlock(fileString);
+		const regex = /@description(?:[\s\S]*@description)?\s*([\s\S]*)/;
+		const match = commentBlock.match(regex);
+		if (match) {
+			const result = match[1]
+				.replace(/^\s*\*\s?/gm, '')
+				.trim()
+				.replace(/\/(?!.*\/)/g, '');
+			if (fileName) {
+				return `## ${fileName}\n${result}`;
+			}
+			return result;
+		}
+		return '';
 	};
 	/**
 	 * @private
@@ -246,7 +329,11 @@ export class LibDev {
 			const code = await LibDev.getContent(path_);
 			let exportName = LibDev.getBasenameWithoutExt(path_);
 			const namedExportPattern = new RegExp(
-				'export\\s+' + '(?:const|let|var|function|class|[^\\s]+)\\s+' + exportName + '\\b',
+				'export\\s+' +
+					'(?!default\\s+)' +
+					'(?:const|let|var|function|class|[^\\s]+)\\s+' +
+					exportName +
+					'\\b',
 				'g'
 			);
 			if (namedExportPattern.test(code)) {

@@ -1,36 +1,43 @@
-﻿# js_lib_template
+!!!Note generated using [@html_first/js_lib_template](https://www.npmjs.com/package@html_firstjs_lib_template)
 
--   allow `mjs/ts` dev to generate single file exporter
+!!!WARNING STARTS this library is highly opionated
+- uses single-named export on same-named file
+- will not check nested file inside a sub-folders
+- don't use it on a production or published library directly without checking any of it's behaviour
+that might not suited to your library paradigm;
+- it also directly messes with `filePath`
+>	- generate single exporter at `filePath`
+- and `readMePath`
+>	- generate single `mark down` file
+- so again unless you are familiar with this library output, don't run it on prod or published
 
-## class API
+!!!WARNING ENDS
 
--   `LibDev`
-
-## install with
-
+## HOW TO INSTALL
 ```shell
-npm i @html_first/js_lib_template --save-dev
+npm i @html_firstjs_lib_template --save-dev
+```
+or
+```shell
+bun i @html_firstjs_lib_template -D
+```
+or any other library management cli
+## HOW TO USE
+ create new `LibDev` instance
+ ```js
+// file.mjs
+// @ts-check
+
+import { LibDev } from "@html_firstjs_lib_template"
+
+new LibDev(options);
 ```
 
--   make sure it's on your `devDependencies` to avoid problems in production;
+```js
+node ./path/to/file.mjs // ofcourse you can other than node, like bun deno or other
+```
 
-## the catch
-
--   opionanted
-    > -   single-file<sup>1)</sup> single-named<sup>1)</sup> export
-    >     > -   <sup>1)</sup>same name
-    > -   lowerCase at first letter will NOT be exported(on `generated file`) unless, it has in the
-    >     name;
-    >     > -   `.type.`:
-    >     >     > -   export first name matched `@typedef` comment inside the `file`;
-    >     >     > -   it will export the whole comment, so if you don't want to export it, best to
-    >     >     >     separate the comment block;
-    >     > -   `.export.`:
-    >     >     > -   export module with matched file name (without `.export.`);
-    >     >     > -   usefull to export function like `html` literal (like on `lit`
-    >     >     >     `html template literal function`);
-    > -   it's highly unlikely you will run this library alone (without `tsc` or other script when
-    >     developing a library)
-    >     > -   so we took the liberty to put
-    >     >     [`concurrently`](https://www.npmjs.com/package/concurrently) into our
-    >     >     `peerDependency`
+## EXPORTED API AND TYPES
+- [LibDev](#libdev)
+## LibDev
+- class API to watch for file changes-  we use chokidar for watching changes:> - refer the options to [chokidar github](https://github.com/paulmillrchokidar)```js    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {      filePath: string;      folderPath?: string;      readMePath?: string;      copyright?: string[];      description?: string[];      option?: import("chokidar").WatchOptions;   });```

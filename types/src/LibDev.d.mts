@@ -1,3 +1,19 @@
+/**
+ * @description
+ * - class API to watch for file changes
+ * -  we use chokidar for watching changes:
+ * > - refer the options to [chokidar github](https://github.com/paulmillr/chokidar)
+ * ```js
+ *     constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {
+ *       filePath: string;
+ *       folderPath?: string;
+ *       readMePath?: string;
+ *       copyright?: string[];
+ *       description?: string[];
+ *       option?: import("chokidar").WatchOptions;
+ *    });
+ *	```
+ */
 export class LibDev {
     /**
      * @private
@@ -19,6 +35,19 @@ export class LibDev {
      * @param {string[]} lines
      */
     private static generateCommentBlock;
+    /**
+     * @private
+     * @param {string} fileString
+     * @returns {string}
+     */
+    private static getFirstDescriptionBlock;
+    /**
+     * @private
+     * @param {string} fileString
+     * @param {string} [fileName]
+     * @returns {string}
+     */
+    private static readMeString;
     /**
      * @private
      * @param {string} filePath
@@ -46,13 +75,16 @@ export class LibDev {
      * - realtive path
      * @param {string} [a0.folderPath]
      * - realtive path
+     * @param {string} [a0.readMePath]
+     * - realtive path
      * @param {string[]} [a0.copyright]
      * @param {string[]} [a0.description]
      * @param {import('chokidar').WatchOptions} [a0.option]
      */
-    constructor({ filePath, folderPath, copyright, description, option }: {
+    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {
         filePath: string;
         folderPath?: string;
+        readMePath?: string;
         copyright?: string[];
         description?: string[];
         option?: import("chokidar").WatchOptions;
@@ -66,7 +98,7 @@ export class LibDev {
      * @private
      * @type {string}
      */
-    private comments;
+    private comment;
     /**
      * @private
      * @type {string}
@@ -82,6 +114,11 @@ export class LibDev {
      * @type {_Queue}
      */
     private queueHandler;
+    /**
+     * @private
+     * @type {string}
+     */
+    private readMePath;
     /**
      * @private
      */
