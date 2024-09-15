@@ -184,8 +184,11 @@ export class LibDev {
 							''
 						);
 						if (fileContent) {
-							readMe_.push(LibDev.readMeString(fileContent, name));
-							exportedAPI.push(name);
+							const readMeString = LibDev.readMeString(fileContent, name);
+							if (readMeString) {
+								readMe_.push(readMeString);
+								exportedAPI.push(name);
+							}
 						}
 						const allComments = fileContent.match(
 							new RegExp(
@@ -205,8 +208,11 @@ export class LibDev {
 							);
 						}
 						if (fileContent) {
-							readMe_.push(LibDev.readMeString(fileContent, moduleName));
-							exportedAPI.push(moduleName);
+							const readMeString = LibDev.readMeString(fileContent, moduleName);
+							if (readMeString) {
+								readMe_.push(LibDev.readMeString(fileContent, moduleName));
+								exportedAPI.push(moduleName);
+							}
 						}
 						if (extWithDot == '.ts' || extWithDot == '.mts') {
 							import_.push(
@@ -243,7 +249,7 @@ export class LibDev {
 				'\n'
 			)}${types__}\nexport { ${export_.join(', ')} };`;
 			if (this.readMePath) {
-				for (let i = 0; i < exportedAPI.length; i++) {
+				for (let i = exportedAPI.length - 1; i >= 0; i--) {
 					const exportedAPI_ = exportedAPI[i];
 					readMe_.unshift(`- [${exportedAPI_}](#${exportedAPI_.toLocaleLowerCase()})`);
 				}
@@ -286,7 +292,7 @@ export class LibDev {
 				.trim()
 				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
-				return `## ${fileName}\n${result}`;
+				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${result}`;
 			}
 			return result;
 		}

@@ -39,5 +39,5 @@ node ./path/to/file.mjs // ofcourse you can other than node, like bun deno or ot
 
 ## EXPORTED API AND TYPES
 - [LibDev](#libdev)
-## LibDev
+<h2 id="libdev">LibDev</h2>
 - class API to watch for file changes-  we use chokidar for watching changes:> - refer the options to [chokidar github](https://github.com/paulmillr/chokidar)```js    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {      filePath: string;      folderPath?: string;      readMePath?: string;      copyright?: string[];      description?: string[];      option?: import("chokidar").WatchOptions;   });```
