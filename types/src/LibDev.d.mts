@@ -14,7 +14,7 @@
  *    });
  *	```
  *
- * - the exported API should match literally:
+ * - the exported API should contains match literally:
  * ```js
  *	const exportPatterns = [
  *		`export class ${exportName}`,
@@ -24,6 +24,20 @@
  * ```
  * > - no `var` or `let` as it should not be reassigned;
  * > - this detection uses `string.includes`, as I cannot get arround `regex` to allow me to use `$` as export name;
+ * - auto export rules:
+ * > - has `description`;
+ * > > - detectes the first `commentBlock` with `description`;
+ * > > - automatically turns after last `description` of that `commentBlock` until end of the `commentBlock`;
+ * > - `upperCase` OR `symbol`;
+ * > - `fileName` match with `exportedName`;
+ * > - `special export`:
+ * > > - `fileName` contains `.type.`:
+ * > > > - detect first comment block with `typedef` of matched `fileName`(without `.type.`)
+ * > > - `fileName` contains `.export.`:
+ * > > > - bypassing `upperCase` rule:
+ * - links:
+ * > - auto named `h2` tag `id`, it match the `fileName` in `lowerCase`;
+ * > - in this `autoExported` `LibDev` can be refered as `#libdev`;
  */
 export class LibDev {
     /**

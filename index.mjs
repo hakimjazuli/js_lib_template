@@ -7,7 +7,6 @@
  * developed and published under MIT license,
  * @description
  * !!!Note generated using [@html_first/js_lib_template](https://www.npmjs.com/package/@html_first/js_lib_template)
- * 
  * !!!WARNING STARTS this library is highly opionated
  * - uses single-named export on same-named file
  * - will not check nested file inside a sub-folders

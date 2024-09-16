@@ -17,7 +17,7 @@
 		"templating"
 	],
 	"scripts": {
-		"dev": "concurrently \"bun ./dev/index.mjs\" \"bun tsc --watch\""
+		"dev": "concurrently \"bun ./dev/index.mjs --watch\" \"bun tsc --watch\""
 	},
 	"author": "hakim_jazuli",
 	"license": "MIT",
