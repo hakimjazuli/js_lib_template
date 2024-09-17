@@ -5,6 +5,7 @@ import { readFile } from 'fs/promises';
 import { promises as fs } from 'fs';
 import { basename, extname, join } from 'path';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
+import { log } from 'console';
 
 /**
  * @description
@@ -60,6 +61,7 @@ export class LibDev {
 	 * @type {LibDev}
 	 */
 	static __;
+	static exportedListContent;
 	/**
 	 * @param {Object} a0
 	 * @param {string} a0.filePath
@@ -90,6 +92,7 @@ export class LibDev {
 			return;
 		}
 		LibDev.exportedListContent = tableOfContentTitle.toLocaleLowerCase().replace(/ /g, '-');
+		LibDev.goToExportedList = `\n*) <sub>[go to exported list](#${LibDev.exportedListContent})</sub>\n`;
 		this.filePath = filePath;
 		copyright.unshift('@copyright');
 		description.unshift('@description');
@@ -305,7 +308,6 @@ export class LibDev {
 		}
 		return;
 	};
-	static exportedListContent = 'exported-list-content';
 	/**
 	 * @private
 	 * @param {string} fileString
@@ -321,8 +323,9 @@ export class LibDev {
 	};
 	/**
 	 * @private
+	 * @type {string}
 	 */
-	static goToExportedList = `\n*) <sub>[go to exported list](#${LibDev.exportedListContent})</sub>\n`;
+	static goToExportedList;
 	/**
 	 * @private
 	 * @param {string} fileString
