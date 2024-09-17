@@ -293,7 +293,7 @@ export class LibDev {
 					readMe_.unshift(`- [${exportedAPI_}](#${exportedAPI_.toLocaleLowerCase()})`);
 				}
 				readMe_.unshift(
-					`<h2 id="${LibDev.exportedListContent}">EXPORTED API AND TYPES</h2>`
+					`<h2 id="${LibDev.exportedListContent}">${LibDev.exportedListContent}</h2>`
 				);
 				readMe_.unshift(LibDev.readMeString(this.comment));
 				const readMeString = readMe_.join('\n\n');
