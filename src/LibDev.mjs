@@ -57,6 +57,10 @@ export class LibDev {
 		'@see {@link https://www.npmjs.com/package/@html_first/js_lib_template | @html_first/js_lib_template}',
 	];
 	/**
+	 * @type {LibDev}
+	 */
+	static __;
+	/**
 	 * @param {Object} a0
 	 * @param {string} a0.filePath
 	 * - realtive path
@@ -64,6 +68,7 @@ export class LibDev {
 	 * - realtive path
 	 * @param {string} [a0.readMePath]
 	 * - realtive path
+	 * @param {string} [a0.tableOfContentTitle]
 	 * @param {string[]} [a0.copyright]
 	 * @param {string[]} [a0.description]
 	 * @param {import('chokidar').WatchOptions} [a0.option]
@@ -72,10 +77,19 @@ export class LibDev {
 		filePath,
 		readMePath = '',
 		folderPath = './src',
+		tableOfContentTitle = 'exported-api-and-type-list',
 		copyright = [],
 		description = [],
 		option = {},
 	}) {
+		if (LibDev.__ instanceof LibDev) {
+			console.warn({
+				warning: 'this is a singleton class, you can only instantiate one of it',
+				solution: 'refer to the first instance instead',
+			});
+			return;
+		}
+		LibDev.exportedListContent = tableOfContentTitle.toLocaleLowerCase().replace(/ /g, '-');
 		this.filePath = filePath;
 		copyright.unshift('@copyright');
 		description.unshift('@description');
