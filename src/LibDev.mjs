@@ -291,7 +291,7 @@ export class LibDev {
 				'\n'
 			)}${types__}\nexport { ${export_.join(', ')} };`.replaceAll(
 				/import\((['"])\.\//g,
-				'import($1./src'
+				'import($1./src/'
 			);
 			if (this.readMePath) {
 				for (let i = exportedAPI.length - 1; i >= 0; i--) {
