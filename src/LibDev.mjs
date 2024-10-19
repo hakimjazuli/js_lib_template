@@ -91,7 +91,7 @@ export class LibDev {
 			});
 			return;
 		}
-		LibDev.exportedListContent = tableOfContentTitle.toLocaleLowerCase().replace(/ /g, '-');
+		LibDev.exportedListContent = tableOfContentTitle.toLocaleLowerCase().replaceAll(/ /g, '-');
 		LibDev.goToExportedList = `\n*) <sub>[go to exported list](#${LibDev.exportedListContent})</sub>\n`;
 		this.filePath = filePath;
 		copyright.unshift('@copyright');
@@ -221,8 +221,8 @@ export class LibDev {
 					const extWithDot = extname(file.name);
 					if (file.name.includes(typesIdentifier)) {
 						const fileContent = await LibDev.getContent(join(folderPath, file.name));
-						const name = file.name.replace(
-							(typesIdentifier + extWithDot).replace('..', '.'),
+						const name = file.name.replaceAll(
+							(typesIdentifier + extWithDot).replaceAll('..', '.'),
 							''
 						);
 						if (fileContent) {
@@ -244,8 +244,8 @@ export class LibDev {
 						const fileContent = await LibDev.getContent(join(folderPath, file.name));
 						let moduleName = baseName;
 						if (file.name.includes(forcedExport)) {
-							moduleName = file.name.replace(
-								(forcedExport + extWithDot).replace('..', '.'),
+							moduleName = file.name.replaceAll(
+								(forcedExport + extWithDot).replaceAll('..', '.'),
 								''
 							);
 						}
@@ -261,7 +261,7 @@ export class LibDev {
 								`import { ${moduleName} } from './${join(
 									folderPath,
 									baseName
-								).replace(/\\/g, '/')}';`
+								).replaceAll(/\\/g, '/')}';`
 							);
 						}
 						if (extWithDot == '.mjs') {
@@ -269,7 +269,7 @@ export class LibDev {
 								`import { ${moduleName} } from './${join(
 									folderPath,
 									baseName + extWithDot
-								).replace(/\\/g, '/')}';`
+								).replaceAll(/\\/g, '/')}';`
 							);
 						}
 						export_.push(moduleName);
@@ -289,7 +289,10 @@ export class LibDev {
 			const types__ = types_.length ? '\n\n' + types_.join('\n') + '\n' : '';
 			const fileString = `${tsCheckString}${this.comment}\n\n${import_.join(
 				'\n'
-			)}${types__}\nexport { ${export_.join(', ')} };`;
+			)}${types__}\nexport { ${export_.join(', ')} };`.replaceAll(
+				/import\((['"])\.\//g,
+				'import($1./src'
+			);
 			if (this.readMePath) {
 				for (let i = exportedAPI.length - 1; i >= 0; i--) {
 					const exportedAPI_ = exportedAPI[i];
@@ -338,9 +341,9 @@ export class LibDev {
 		const match = commentBlock.match(regex);
 		if (match) {
 			const result = match[1]
-				.replace(/^\s*\*\s?/gm, '')
+				.replaceAll(/^\s*\*\s?/gm, '')
 				.trim()
-				.replace(/\/(?![\s\S]*\/)/, '');
+				.replaceAll(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
 				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${
 					LibDev.goToExportedList
@@ -371,7 +374,7 @@ export class LibDev {
 	 */
 	static getBasenameWithoutExt(filePath) {
 		const baseNameWithExt = basename(filePath);
-		return baseNameWithExt.replace(extname(baseNameWithExt), '');
+		return baseNameWithExt.replaceAll(extname(baseNameWithExt), '');
 	}
 	/**
 	 * @private
