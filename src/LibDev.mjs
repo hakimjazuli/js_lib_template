@@ -341,9 +341,9 @@ export class LibDev {
 		const match = commentBlock.match(regex);
 		if (match) {
 			const result = match[1]
-				.replaceAll(/^\s*\*\s?/gm, '')
+				.replace(/^\s*\*\s?/gm, '')
 				.trim()
-				.replaceAll(/\/(?![\s\S]*\/)/, '');
+				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
 				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${
 					LibDev.goToExportedList

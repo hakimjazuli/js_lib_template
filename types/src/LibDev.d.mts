@@ -46,6 +46,11 @@ export class LibDev {
      */
     private static readonly generatedString;
     /**
+     * @type {LibDev}
+     */
+    static __: LibDev;
+    static exportedListContent: any;
+    /**
      * @private
      */
     private static directives;
@@ -60,7 +65,6 @@ export class LibDev {
      * @param {string[]} lines
      */
     private static generateCommentBlock;
-    static exportedListContent: string;
     /**
      * @private
      * @param {string} fileString
@@ -69,6 +73,7 @@ export class LibDev {
     private static getFirstDescriptionBlock;
     /**
      * @private
+     * @type {string}
      */
     private static goToExportedList;
     /**
@@ -107,14 +112,16 @@ export class LibDev {
      * - realtive path
      * @param {string} [a0.readMePath]
      * - realtive path
+     * @param {string} [a0.tableOfContentTitle]
      * @param {string[]} [a0.copyright]
      * @param {string[]} [a0.description]
      * @param {import('chokidar').WatchOptions} [a0.option]
      */
-    constructor({ filePath, readMePath, folderPath, copyright, description, option, }: {
+    constructor({ filePath, readMePath, folderPath, tableOfContentTitle, copyright, description, option, }: {
         filePath: string;
         folderPath?: string;
         readMePath?: string;
+        tableOfContentTitle?: string;
         copyright?: string[];
         description?: string[];
         option?: import("chokidar").WatchOptions;
