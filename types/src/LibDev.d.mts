@@ -26,6 +26,7 @@
  * > - this detection uses `string.includes`, as I cannot get arround `regex` to allow me to use `$` as export name;
  * - auto export rules:
  * > - has `description`;
+ * > > - in case you want to render '' use ["blank"] with no quotes;
  * > > - detectes the first `commentBlock` with `description`;
  * > > - automatically turns after last `description` of that `commentBlock` until end of the `commentBlock`;
  * > - `upperCase` OR `symbol`;
