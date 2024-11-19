@@ -50,7 +50,10 @@ export class LibDev {
      * @type {LibDev}
      */
     static __: LibDev;
-    static exportedListContent: any;
+    /**
+     * @type {string}
+     */
+    static exportedListContent: string;
     /**
      * @private
      */

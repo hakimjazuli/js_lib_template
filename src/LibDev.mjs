@@ -5,7 +5,6 @@ import { readFile } from 'fs/promises';
 import { promises as fs } from 'fs';
 import { basename, extname, join } from 'path';
 import { _Queue, _QueueObject } from '@html_first/simple_queue';
-import { log } from 'console';
 
 /**
  * @description
@@ -62,6 +61,9 @@ export class LibDev {
 	 * @type {LibDev}
 	 */
 	static __;
+	/**
+	 * @type {string}
+	 */
 	static exportedListContent;
 	/**
 	 * @param {Object} a0
