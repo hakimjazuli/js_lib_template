@@ -351,9 +351,9 @@ export class LibDev {
 				.trim()
 				.replace(/\/(?![\s\S]*\/)/, '');
 			if (fileName) {
-				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n${
+				return `<h2 id="${fileName.toLowerCase()}">${fileName}</h2>\n\n${result}\n${
 					LibDev.goToExportedList
-				}\n${result}\n${LibDev.goToExportedList}`;
+				}`;
 			}
 			return result;
 		}
