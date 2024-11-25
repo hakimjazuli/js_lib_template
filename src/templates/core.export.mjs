@@ -291,7 +291,7 @@ export class core {
 	 * @param {string} commentString
 	 */
 	resolveCommentImport = (parentPath, commentString) => {
-		return commentString.replace(/import\(['"].([^'"]+)['"]\)/g, (match, capturedPath) => {
+		return commentString.replace(/import\(['"].([^'"]+)['"]\)/g, (_, capturedPath) => {
 			const importName = capturedPath.split('/');
 			return `import('${parentPath}/${importName[importName.length - 1]}')`;
 		});
