@@ -1,6 +1,6 @@
 {
 	"name": "@html_first/js_lib_template",
-	"version": "2.0.3",
+	"version": "2.0.4",
 	"description": "an opionated js library single file exporter",
 	"main": "index.mjs",
 	"types": "./types/index.d.mts",
