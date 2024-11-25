@@ -52,7 +52,6 @@
  * > - in this `autoExported` case `__JSDev` can be refered as `#__jsdev`;
  * > - use `namedExport` extracted files from `this.getListFilesNestedDetails` method;
  * > - run `thisInstance.run();` to start the watcher;
- *
  * !!!WARNING
  * - copy out:
  * > - filePath: default `./index.mjs`,
@@ -303,7 +302,6 @@ export type coreOptions = {
      * > - in this `autoExported` case `__JSDev` can be refered as `#__jsdev`;
      * > - use `namedExport` extracted files from `this.getListFilesNestedDetails` method;
      * > - run `thisInstance.run();` to start the watcher;
-     *
      * !!!WARNING
      * - copy out:
      * > - filePath: default `./index.mjs`,

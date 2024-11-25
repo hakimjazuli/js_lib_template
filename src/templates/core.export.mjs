@@ -59,7 +59,6 @@ import { _Queue, _QueueObject } from '@html_first/simple_queue';
  * > - in this `autoExported` case `__JSDev` can be refered as `#__jsdev`;
  * > - use `namedExport` extracted files from `this.getListFilesNestedDetails` method;
  * > - run `thisInstance.run();` to start the watcher;
- *
  * !!!WARNING
  * - copy out:
  * > - filePath: default `./index.mjs`,
