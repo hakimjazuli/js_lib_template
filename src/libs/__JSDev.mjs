@@ -139,7 +139,7 @@ export class __JSDev extends core {
 				}
 				if (isValidExportName) {
 					exportedImports.push(
-						`export { ${exportName} } from './${parentPath.replaceAll(
+						`export { ${exportName} } from '${parentPath.replaceAll(
 							'\\',
 							'/'
 						)}/${name}';`
