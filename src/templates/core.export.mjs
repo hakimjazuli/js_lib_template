@@ -163,7 +163,10 @@ export class core {
 	 * @param {Dirent} dirent
 	 */
 	getFileDetails = async (dirent) => {
-		const { parentPath, name } = dirent;
+		let { parentPath, name } = dirent;
+		if (!parentPath.startsWith('./')) {
+			parentPath = `./${parentPath}`;
+		}
 		const fileContent = this.getContent(path_join(parentPath, name));
 		const filePath = path_join(parentPath, name);
 		return {
