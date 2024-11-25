@@ -165,7 +165,7 @@ export class core {
 	 */
 	getFileDetails = async (dirent) => {
 		const { parentPath, name } = dirent;
-		const fileContent = this.getContent(path_join(parentPath, name));
+		const fileContent = this.getContent(path_join(parentPath, name)).replace(/\[blank\]/g, '');
 		const filePath = path_join(parentPath, name);
 		return {
 			parentPath,
