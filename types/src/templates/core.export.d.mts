@@ -180,6 +180,12 @@ export class core {
      */
     private getFirstDescriptionBlockUnsanitized;
     /**
+     * @private
+     * @param {string} parentPath
+     * @param {string} commentString
+     */
+    private resolveCommentImport;
+    /**
      * @param {Object} options
      * @param {string} options.fileContent
      * @param {string} [options.asReadMeExportedName]
@@ -213,11 +219,12 @@ export class core {
     run: () => Promise<void>;
     /**
      * @protected
+     * @param {string} parentPath
      * @param {string} fileContent
      * @param {string} exportName
      * @returns {RegExpMatchArray|null}
      */
-    protected getTypeDefsOnDirectiveFile: (fileContent: string, exportName: string) => RegExpMatchArray | null;
+    protected getTypeDefsOnDirectiveFile: (parentPath: string, fileContent: string, exportName: string) => RegExpMatchArray | null;
     /**
      * @param {string} exportName
      * @returns {string[]}

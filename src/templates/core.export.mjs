@@ -286,6 +286,17 @@ export class core {
 		return '';
 	};
 	/**
+	 * @private
+	 * @param {string} parentPath
+	 * @param {string} commentString
+	 */
+	resolveCommentImport = (parentPath, commentString) => {
+		return commentString.replace(/import\(['"].([^'"]+)['"]\)/g, (match, capturedPath) => {
+			const importName = capturedPath.split('/');
+			return `import('${parentPath}/${importName[importName.length - 1]}')`;
+		});
+	};
+	/**
 	 * @param {Object} options
 	 * @param {string} options.fileContent
 	 * @param {string} [options.asReadMeExportedName]
@@ -388,18 +399,26 @@ export class core {
 
 	/**
 	 * @protected
+	 * @param {string} parentPath
 	 * @param {string} fileContent
 	 * @param {string} exportName
 	 * @returns {RegExpMatchArray|null}
 	 */
-	getTypeDefsOnDirectiveFile = (fileContent, exportName) => {
-		return fileContent.match(
+	getTypeDefsOnDirectiveFile = (parentPath, fileContent, exportName) => {
+		parentPath = parentPath.replace('\\', '/');
+		const commentBlock = fileContent.match(
 			new RegExp(
 				`\/\\*\\*[\\s\\S]*?@${this._typedefIdentifier}[\\s\\S]*?${
 					exportName.split('.')[0]
 				}[\\s\\S]*?\\*\\/`
 			)
 		);
+		for (let i = 0; i < commentBlock.length; i++) {
+			const comment = commentBlock[i];
+			console.log({ parentPath });
+			commentBlock[i] = this.resolveCommentImport(parentPath, comment);
+		}
+		return commentBlock;
 	};
 	/**
 	 * @param {string} exportName

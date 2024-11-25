@@ -119,7 +119,11 @@ export class __JSDev extends core {
 				if (!isValidExportName) {
 					continue;
 				}
-				const typeDef = this.getTypeDefsOnDirectiveFile(fileContent, exportName);
+				const typeDef = this.getTypeDefsOnDirectiveFile(
+					parentPath,
+					fileContent,
+					exportName
+				);
 				exportedTypes.push(...typeDef);
 			} else {
 				const desciptionBlock = this.getFirstDescriptionBlock({
