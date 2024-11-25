@@ -418,7 +418,6 @@ export class core {
 		);
 		for (let i = 0; i < commentBlock.length; i++) {
 			const comment = commentBlock[i];
-			console.log({ parentPath });
 			commentBlock[i] = this.resolveCommentImport(parentPath, comment);
 		}
 		return commentBlock;
