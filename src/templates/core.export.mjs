@@ -164,7 +164,7 @@ export class core {
 	 */
 	getFileDetails = async (dirent) => {
 		const { parentPath, name } = dirent;
-		const fileContent = this.getContent(path_join(parentPath, name)).replace(/\[blank\]/g, '');
+		const fileContent = this.getContent(path_join(parentPath, name));
 		const filePath = path_join(parentPath, name);
 		return {
 			parentPath,
@@ -297,8 +297,7 @@ export class core {
 		const commentBlock = this.getFirstDescriptionBlockUnsanitized(
 			fileContent,
 			descriptionKeyword
-		);
-
+		).replace(/\[blank\]/g, '');
 		const regex = this.getFirstDescriptionBlockRegex;
 		const match = commentBlock.match(regex);
 		if (match) {
