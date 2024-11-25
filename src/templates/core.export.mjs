@@ -296,7 +296,21 @@ export class core {
 	resolveCommentImport = (parentPath, commentString) => {
 		return commentString.replace(/import\(['"].([^'"]+)['"]\)/g, (_, capturedPath) => {
 			const importName = capturedPath.split('/');
-			return `import('${parentPath}/${importName[importName.length - 1]}')`;
+			const name = importName[importName.length - 1];
+			importName.splice(importName.length - 1, 1);
+			const joined = [...parentPath.split('/'), ...importName, name];
+			for (let i = 0; i < joined.length; i++) {
+				const joined_ = joined[i];
+				if (i > 0 && !joined_) {
+					joined.splice(i, 1);
+					continue;
+				}
+				if (i > 0 && (joined_ == '.' || joined_ == '..')) {
+					joined.splice(i - 1, 2);
+					continue;
+				}
+			}
+			return `import('${joined.join('/')}')`;
 		});
 	};
 	/**
