@@ -20,11 +20,9 @@
  *  * - realtive path from wroking directory
  *  * @property {string} [coreOptions.folderPath]
  *  * - realtive path from wroking directory
- *  * @property {string} [coreOptions.folderPathAlias]
  *  * @property {string} [coreOptions.readMePath]
  *  * - realtive path from wroking directory
  *  * @property {string} [coreOptions.tableOfContentTitle]
- *  * @property {string[]} [coreOptions.typedef]
  *  * @property {string[]} [coreOptions.copyright]
  *  * @property {string[]} [coreOptions.description]
  *  * @property {import('chokidar').WatchOptions} [coreOptions.option]
@@ -260,10 +258,6 @@ export type coreOptions = {
      */
     folderPath?: string;
     /**
-     * *
-     */
-    folderPathAlias?: string;
-    /**
      * * - realtive path from wroking directory
      * *
      */
@@ -272,10 +266,6 @@ export type coreOptions = {
      * *
      */
     tableOfContentTitle?: string;
-    /**
-     * *
-     */
-    typedef?: string[];
     /**
      * *
      */
