@@ -22,7 +22,7 @@ import { core } from '../templates/core.export.mjs';
  * new __PHPDev({
  *	 folderPath: './src',
  *	 readMePath: './README.md',
- *   description: ['## HOW TO INSTALL','```shell,'composer require author/package-name',```'].
+ *   description: ['## HOW TO INSTALL','```shell','composer require author/package-name','```'].
  * }).run();
  * ```
  * - saving script for convenience:
