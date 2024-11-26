@@ -7,11 +7,11 @@
  * @description
  * ## HOW TO INSTALL
  * ```shell
- * npm i @html_firstjs_lib_template --save-dev
+ * npm i @html_first/js_lib_template --save-dev
  * ```
  * or
  * ```shell
- * bun i @html_firstjs_lib_template -D
+ * bun i @html_first/js_lib_template -D
  * ```
  * or any npm dependency management cli
  * ## singleton_instantiate_to_run
