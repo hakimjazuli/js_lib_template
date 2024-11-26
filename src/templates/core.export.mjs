@@ -430,9 +430,11 @@ export class core {
 				}[\\s\\S]*?\\*\\/`
 			)
 		);
-		for (let i = 0; i < commentBlock.length; i++) {
-			const comment = commentBlock[i];
-			commentBlock[i] = this.resolveCommentImport(parentPath, comment);
+		if (commentBlock) {
+			for (let i = 0; i < commentBlock.length; i++) {
+				const comment = commentBlock[i];
+				commentBlock[i] = this.resolveCommentImport(parentPath, comment);
+			}
 		}
 		return commentBlock;
 	};
