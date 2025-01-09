@@ -103,7 +103,7 @@ export class __JSDev extends core {
 			readmeFile.push(`## ${this.exportedListContentTitle}`);
 			readmeFile.push(...jumpTos);
 			readmeFile.push(...readMeModuleDetails);
-			this.overwriteFile(this.readMePath, readmeFile.join('\n'));
+			this.overwriteFile(this.readMePath, readmeFile.join('\n').replace(/\[blank\]/g, ''));
 		};
 		const createExportedFile = async () => {
 			exportedFile.push(this.commentBlockOnExportedModule);

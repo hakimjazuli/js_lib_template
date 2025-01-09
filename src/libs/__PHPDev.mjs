@@ -97,7 +97,7 @@ export class __PHPDev extends core {
 			readmeFile.push(`## ${this.exportedListContentTitle}`);
 			readmeFile.push(...jumpTos);
 			readmeFile.push(...readMeModuleDetails);
-			this.overwriteFile(this.readMePath, readmeFile.join('\n\n'));
+			this.overwriteFile(this.readMePath, readmeFile.join('\n\n').replace(/\[blank\]/g, ''));
 		};
 		for (let i = 0; i < files.length; i++) {
 			const { fileContent, namedExport } = files[i];
