@@ -90,9 +90,7 @@ export class core {
 			});
 			return;
 		}
-		this.exportedListContentTitle = tableOfContentTitle
-			.toLocaleLowerCase()
-			.replaceAll(/ /g, '-');
+		this.exportedListContentTitle = tableOfContentTitle.toLocaleLowerCase().replaceAll(/ /g, '-');
 		this.goToExportedList = `\n*) <sub>[go to exported list](#${this.exportedListContentTitle})</sub>\n`;
 		this.filePath = filePath;
 		copyright.unshift('@copyright');
@@ -292,7 +290,7 @@ export class core {
 	 * @param {string} commentString
 	 */
 	resolveCommentImport = (parentPath, commentString) => {
-		return commentString.replace(/import\(['"].([^'"]+)['"]\)/g, (_, capturedPath) => {
+		return commentString.replace(/import\(['"]\.([^'"]+)['"]\)/s, (_, capturedPath) => {
 			const importName = capturedPath.split('/');
 			const name = importName[importName.length - 1];
 			importName.splice(importName.length - 1, 1);
