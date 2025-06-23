@@ -418,7 +418,7 @@ export class core {
 	 * @returns {RegExpMatchArray|null}
 	 */
 	getTypeDefsOnDirectiveFile = (parentPath, fileContent, exportName) => {
-		parentPath = parentPath.replace('\\', '/');
+		parentPath = parentPath.replace(/\\/g, '/');
 		const commentBlock = fileContent.match(
 			new RegExp(
 				`\/\\*\\*[\\s\\S]*?@${this._typedefIdentifier}[\\s\\S]*?${
