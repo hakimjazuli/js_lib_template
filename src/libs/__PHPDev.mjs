@@ -109,7 +109,7 @@ export class __PHPDev extends core {
 				fileContent,
 			});
 			const namespace = `${this.getNameSpace(fileContent)}\\${exportName}`;
-			const link = namespace.replaceAll('\\', '_').toLowerCase();
+			const link = namespace.replace(/\\/g, '_').toLowerCase();
 			jumpTos.push(`- [${namespace}](#${link})`);
 			readMeModuleDetails.push(`<h2 id="${link}">${namespace}</h2>`);
 			readMeModuleDetails.push(desciptionBlock);
