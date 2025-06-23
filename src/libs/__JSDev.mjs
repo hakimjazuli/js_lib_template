@@ -119,11 +119,7 @@ export class __JSDev extends core {
 				if (!isValidExportName) {
 					continue;
 				}
-				const typeDef = this.getTypeDefsOnDirectiveFile(
-					parentPath,
-					fileContent,
-					exportName
-				);
+				const typeDef = this.getTypeDefsOnDirectiveFile(parentPath, fileContent, exportName);
 				exportedTypes.push(...typeDef);
 			} else {
 				const desciptionBlock = this.getFirstDescriptionBlock({
@@ -139,10 +135,7 @@ export class __JSDev extends core {
 				}
 				if (isValidExportName) {
 					exportedImports.push(
-						`export { ${exportName} } from '${parentPath.replaceAll(
-							'\\',
-							'/'
-						)}/${name}';`
+						`export { ${exportName} } from '${parentPath.replace(/\\/g, '/')}/${name}';`
 					);
 				}
 			}
